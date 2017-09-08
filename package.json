@@ -1,0 +1,23 @@
+{
+  "name": "network-if",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TSI-Inc/network-if.git"
+  },
+  "author": "Brett Thompson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TSI-Inc/network-if/issues"
+  },
+  "homepage": "https://github.com/TSI-Inc/network-if#readme",
+  "dependencies": {
+    "eventemitter3": "^2.0.3",
+    "lodash": "^4.17.4"
+  }
+}
