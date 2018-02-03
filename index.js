@@ -13,7 +13,7 @@ module.exports = {
 const Events = {
     NewInterface: 'addedIf',
     RemovedInterface: 'removedIf',
-    NewIpv4Addr: 'newIPv4'
+    NewIpAddr: 'addedIpAddr'
 }
 
 let interval = null;
@@ -49,9 +49,49 @@ function _getInterfaces() {
     _alertOld(_.difference(prevIfNames, curIfNames));
 }
 
+
+function _compare(prevIfList, curIfList) {
+    Object.keys(curIfList).forEach(entry => {
+        if(_.has(prevIfList, entry)) {
+            _compareAddresses(prevIfList[entry], curIfList[entry]);
+        } else {
+
+        }
+    });
+}
+
+function _compareAddresses(prevIf, curIf) {
+    curIf.forEach(entry => {
+        if(!_contains(entry.address, curIf)) {
+            events.emit(Events.NewIpAddr, entry);
+        }
+    });
+}
+
+function _contains(addr, ifObj) {
+    for(let i = 0; i < ifObj.length; ++i) {
+        if(ifObj[i].address === addr) return true;
+    }
+
+    return false;
+}
+
+function _getIpv4Obj(ifObj, name) {
+    let ret;
+    ifObj.forEach(entry => {
+        if(entry.family === 'IPv4') {
+            ret = entry;
+            ret.name = name;
+            return ret;
+        }
+    });
+
+    return ret;
+}
+
 function _alertNew(interfaces) {
     interfaces.forEach(entry => {
-        events.emit(Events.NewInterface, prevIf[entry]);
+        events.emit(Events.NewInterface, _getIpv4Obj(prevIf[entry], entry));
         if(events.listeners(Events.NewIpv4Addr, true)) {
             _alertNewIPv4(prevIf[entry], entry);
         }
@@ -69,8 +109,10 @@ function _alertNewIPv4(ifObj, name, count) {
     let hasIPv4 = false;
     ifObj.some(entry => {
         if(entry.family === 'IPv4') {
-            hasIPv4 = true;
-            return true;
+            if(!entry.address.startsWith('169.254') || entry.netmask === '255.255.255.252') {
+                hasIPv4 = true;
+                return true;
+            }
         }
     });
 
