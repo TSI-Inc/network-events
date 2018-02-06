@@ -13,7 +13,7 @@ module.exports = {
 const Events = {
     NewInterface: 'addedIf',
     RemovedInterface: 'removedIf',
-    NewIpAddr: 'newIPv4'
+    NewIpv4Addr: 'newIPv4'
 }
 
 let interval = null;
@@ -47,25 +47,6 @@ function _getInterfaces() {
     prevIf = curIf;
     _alertNew(_.difference(curIfNames, prevIfNames));
     _alertOld(_.difference(prevIfNames, curIfNames));
-}
-
-
-function _compare(prevIfList, curIfList) {
-    Object.keys(curIfList).forEach(entry => {
-        if(_.has(prevIfList, entry)) {
-            _compareAddresses(prevIfList[entry], curIfList[entry]);
-        } else {
-
-        }
-    });
-}
-
-function _compareAddresses(prevIf, curIf) {
-    curIf.forEach(entry => {
-        if(!_contains(entry.address, curIf)) {
-            events.emit(Events.NewIpAddr, entry);
-        }
-    });
 }
 
 function _contains(addr, ifObj) {
