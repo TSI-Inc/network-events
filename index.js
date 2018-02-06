@@ -13,7 +13,7 @@ module.exports = {
 const Events = {
     NewInterface: 'addedIf',
     RemovedInterface: 'removedIf',
-    NewIpAddr: 'addedIpAddr'
+    NewIpAddr: 'newIPv4'
 }
 
 let interval = null;
